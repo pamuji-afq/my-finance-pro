@@ -114,18 +114,9 @@ export const DashboardPage = () => {
         </ResponsiveContainer>
       </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mt-6">
-        <Link to="/wallets" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">👛</div><div style={{color: 'var(--on-surface)'}}>Wallets</div></Link>
-        <Link to="/transactions" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">💰</div><div style={{color: 'var(--on-surface)'}}>Transactions</div></Link>
-        <Link to="/budgets" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">📊</div><div style={{color: 'var(--on-surface)'}}>Budgets</div></Link>
-        <Link to="/goals" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">🎯</div><div style={{color: 'var(--on-surface)'}}>Goals</div></Link>
-        <Link to="/reports" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">📈</div><div style={{color: 'var(--on-surface)'}}>Reports</div></Link>
-        <Link to="/ai-advisor" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">🤖</div><div style={{color: 'var(--on-surface)'}}>AI Advisor</div></Link>
-        <Link to="/recurring" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">🔄</div><div style={{color: 'var(--on-surface)'}}>Recurring</div></Link>
-        <Link to="/bills" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">🧾</div><div style={{color: 'var(--on-surface)'}}>Bills</div></Link>
-        <Link to="/networth" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">📊</div><div style={{color: 'var(--on-surface)'}}>Net Worth</div></Link>
-        <Link to="/settings" className="card text-center hover:opacity-80 transition"><div className="text-2xl mb-1">⚙️</div><div style={{color: 'var(--on-surface)'}}>Settings</div></Link>
-      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Link to="/wallets" className="card text-center hover:opacity-80 transition">
+          <div className="text-2xl mb-1">👛</div>
           <div style={{color: 'var(--on-surface)'}}>Wallets</div>
         </Link>
         <Link to="/transactions" className="card text-center hover:opacity-80 transition">
@@ -139,6 +130,22 @@ export const DashboardPage = () => {
         <Link to="/goals" className="card text-center hover:opacity-80 transition">
           <div className="text-2xl mb-1">🎯</div>
           <div style={{color: 'var(--on-surface)'}}>Goals</div>
+        </Link>
+        <Link to="/reports" className="card text-center hover:opacity-80 transition">
+          <div className="text-2xl mb-1">📈</div>
+          <div style={{color: 'var(--on-surface)'}}>Reports</div>
+        </Link>
+        <Link to="/ai-advisor" className="card text-center hover:opacity-80 transition">
+          <div className="text-2xl mb-1">🤖</div>
+          <div style={{color: 'var(--on-surface)'}}>AI Advisor</div>
+        </Link>
+        <Link to="/recurring" className="card text-center hover:opacity-80 transition">
+          <div className="text-2xl mb-1">🔄</div>
+          <div style={{color: 'var(--on-surface)'}}>Recurring</div>
+        </Link>
+        <Link to="/settings" className="card text-center hover:opacity-80 transition">
+          <div className="text-2xl mb-1">⚙️</div>
+          <div style={{color: 'var(--on-surface)'}}>Settings</div>
         </Link>
       </div>
     </div>
