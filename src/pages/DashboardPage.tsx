@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useWalletStore } from '../stores/walletStore';
 import { useTransactionStore } from '../stores/transactionStore';
 import { useBudgetStore } from '../stores/budgetStore';
 import { useGoalStore } from '../stores/goalStore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useTheme } from '../theme/ThemeProvider';
 
 export const DashboardPage = () => {
   const { wallets, activeWalletId, setActiveWallet } = useWalletStore();
   const { transactions } = useTransactionStore();
   const { budgets } = useBudgetStore();
   const { goals } = useGoalStore();
-  const { theme, toggleTheme } = useTheme();
-  const navigate = useNavigate();
+  
   const total = wallets.reduce((s,w)=>s+w.balance,0);
   const currentMonth = new Date().toISOString().slice(0,7);
   const monthlyTx = transactions.filter(t => t.date.startsWith(currentMonth));
@@ -27,10 +25,102 @@ export const DashboardPage = () => {
   const totalCurrent = goals.reduce((s,g)=>s+g.current,0);
   const goalPct = totalGoal > 0 ? (totalCurrent/totalGoal*100).toFixed(0) : 0;
   const chartData = [['Jan',4500],['Feb',5200],['Mar',4800],['Apr',6100],['May',5800],['Jun',6300]].map(([n,v])=>({name:n,value:v}));
-  const navItems = [{ path: '/dashboard', label: 'Dashboard', icon: '🏠' },{ path: '/wallets', label: 'Wallets', icon: '👛' },{ path: '/transactions', label: 'Transactions', icon: '💰' },{ path: '/budgets', label: 'Budgets', icon: '📊' },{ path: '/goals', label: 'Goals', icon: '🎯' },{ path: '/reports', label: 'Reports', icon: '📈' },{ path: '/ai-advisor', label: 'AI', icon: '🤖' },{ path: '/settings', label: 'Settings', icon: '⚙️' }];
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  useEffect(() => { const handleResize = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', handleResize); return () => window.removeEventListener('resize', handleResize); }, []);
-  const NavRail = () => (<div className="m3-nav-rail" style={{ display: isMobile ? 'none' : 'flex' }}><div style={{ marginBottom: 24 }}><div className="m3-nav-rail-item" onClick={toggleTheme}><span style={{ fontSize: 24 }}>{theme === 'dark' ? '☀️' : '🌙'}</span><span className="m3-label-small">Theme</span></div></div><div style={{ flex: 1 }}>{navItems.map(item => (<div key={item.path} className={`m3-nav-rail-item ${window.location.pathname === item.path ? 'm3-nav-rail-item-active' : ''}`} onClick={() => navigate(item.path)}><span style={{ fontSize: 24 }}>{item.icon}</span><span className="m3-label-small">{item.label}</span></div>))}</div></div>);
-  const BottomNav = () => (<div className="m3-bottom-nav" style={{ display: isMobile ? 'flex' : 'none' }}>{navItems.slice(0,4).map(item => (<div key={item.path} className={`m3-bottom-nav-item ${window.location.pathname === item.path ? 'm3-bottom-nav-item-active' : ''}`} onClick={() => navigate(item.path)}><i className={`ti ti-${item.label === 'Dashboard' ? 'layout-dashboard' : item.label === 'Wallets' ? 'wallet' : item.label === 'Transactions' ? 'receipt' : 'chart-pie'}`} style={{ fontSize: 24 }}></i><span className="m3-label-small">{item.label}</span></div>))}<div className="m3-bottom-nav-item" onClick={toggleTheme}><i className={`ti ${theme === 'dark' ? 'ti-sun' : 'ti-moon'}`} style={{ fontSize: 24 }}></i><span className="m3-label-small">Theme</span></div></div>);
-  return (<><NavRail /><BottomNav /><div className="m3-main-content"><div className="m3-grid m3-grid-cols-4" style={{ marginBottom: 24 }}><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-on-primary-container)' }}><span className="m3-title-small">Total Balance</span><div className="m3-headline-medium">Rp {total.toLocaleString()}</div><span className="m3-label-small">{wallets.length} wallets</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--md-sys-color-success)' }}><span className="m3-title-small">Income</span><div className="m3-headline-medium">+Rp {income.toLocaleString()}</div><span className="m3-label-small">This month</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-error-container)', color: 'var(--md-sys-color-error)' }}><span className="m3-title-small">Expense</span><div className="m3-headline-medium">-Rp {expense.toLocaleString()}</div><span className="m3-label-small">This month</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-secondary-container)', color: 'var(--md-sys-color-secondary)' }}><span className="m3-title-small">Saving Rate</span><div className="m3-headline-medium">{savingRate}%</div><span className="m3-label-small">of income</span></div></div><div className="m3-grid m3-grid-cols-2" style={{ marginBottom: 24 }}><div className="m3-card"><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}><span className="m3-title-medium">Budget Progress</span><Link to="/budgets" className="m3-label-medium" style={{ color: 'var(--md-sys-color-primary)' }}>Manage</Link></div><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}><span>Total: Rp {totalBudget.toLocaleString()}</span><span>Spent: Rp {totalSpent.toLocaleString()}</span></div><div className="m3-divider" /><div style={{ marginTop: 12 }}><div className="m3-label-medium">{budgetPct}% used</div><div style={{ height: 8, background: 'var(--md-sys-color-surface-container)', borderRadius: 'var(--md-shape-corner-full)', marginTop: 8 }}><div style={{ width: `${budgetPct}%`, height: '100%', background: 'var(--md-sys-color-primary)', borderRadius: 'var(--md-shape-corner-full)' }} /></div></div></div><div className="m3-card"><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}><span className="m3-title-medium">Goals Progress</span><Link to="/goals" className="m3-label-medium" style={{ color: 'var(--md-sys-color-primary)' }}>View All</Link></div><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}><span>Target: Rp {totalGoal.toLocaleString()}</span><span>Saved: Rp {totalCurrent.toLocaleString()}</span></div><div className="m3-divider" /><div style={{ marginTop: 12 }}><div className="m3-label-medium">{goalPct}% achieved</div><div style={{ height: 8, background: 'var(--md-sys-color-surface-container)', borderRadius: 'var(--md-shape-corner-full)', marginTop: 8 }}><div style={{ width: `${goalPct}%`, height: '100%', background: 'var(--md-sys-color-success)', borderRadius: 'var(--md-shape-corner-full)' }} /></div></div></div></div><div className="m3-card" style={{ marginBottom: 24 }}><span className="m3-title-medium" style={{ marginBottom: 16, display: 'block' }}>Cashflow Trend</span><ResponsiveContainer width="100%" height={280}><LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" stroke="var(--md-sys-color-outline-variant)" /><XAxis dataKey="name" stroke="var(--md-sys-color-on-surface-variant)" /><YAxis stroke="var(--md-sys-color-on-surface-variant)" /><Tooltip contentStyle={{ background: 'var(--md-sys-color-surface-container)', border: 'none', borderRadius: 'var(--md-shape-corner-medium)' }} /><Line type="monotone" dataKey="value" stroke="var(--md-sys-color-primary)" strokeWidth={2} /></LineChart></ResponsiveContainer></div><div className="m3-grid m3-grid-cols-4">{wallets.map(w => (<div key={w.id} className={`m3-card ${activeWalletId === w.id ? 'm3-card-elevated' : ''}`} onClick={() => setActiveWallet(w.id)} style={{ cursor: 'pointer' }}><span className="m3-title-small">{w.name}</span><div className="m3-title-medium" style={{ color: 'var(--md-sys-color-primary)' }}>Rp {w.balance.toLocaleString()}</div></div>))}</div></div></>);
+
+  return (
+    <div className="main-content">
+      <h1 className="title-large text-on-surface mb-6">Dashboard</h1>
+      
+      {/* Wallet Selector */}
+      <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        {wallets.map(w => (
+          <button
+            key={w.id}
+            onClick={() => setActiveWallet(w.id)}
+            className={`chip ${activeWalletId === w.id ? 'chip-active' : ''}`}
+          >
+            {w.name}
+          </button>
+        ))}
+      </div>
+      
+      {/* Summary Cards - Menggunakan M3 tokens */}
+      <div className="grid grid-cols-4 mb-6">
+        <div className="card-elevated bg-primary text-on-primary">
+          <div className="label-small opacity-80">Total Balance</div>
+          <div className="headline-medium">Rp {total.toLocaleString()}</div>
+          <div className="label-small opacity-70 mt-1">{wallets.length} wallets</div>
+        </div>
+        <div className="card-elevated bg-success-container">
+          <div className="label-small text-success">Income</div>
+          <div className="headline-medium text-success">+Rp {income.toLocaleString()}</div>
+          <div className="label-small text-success mt-1">This month</div>
+        </div>
+        <div className="card-elevated bg-error-container">
+          <div className="label-small text-error">Expense</div>
+          <div className="headline-medium text-error">-Rp {expense.toLocaleString()}</div>
+          <div className="label-small text-error mt-1">This month</div>
+        </div>
+        <div className="card-elevated bg-secondary-container">
+          <div className="label-small text-primary">Saving Rate</div>
+          <div className="headline-medium text-primary">{savingRate}%</div>
+          <div className="label-small text-primary mt-1">of income</div>
+        </div>
+      </div>
+      
+      {/* Budget & Goals */}
+      <div className="grid grid-cols-2 mb-6">
+        <div className="card">
+          <div className="flex-between mb-3">
+            <span className="title-medium text-on-surface">Budget Progress</span>
+            <Link to="/budgets" className="label-small text-primary">Manage</Link>
+          </div>
+          <div className="flex-between body-medium mb-2">
+            <span className="text-on-surface-variant">Rp {totalBudget.toLocaleString()}</span>
+            <span className="text-on-surface-variant">Spent: Rp {totalSpent.toLocaleString()}</span>
+          </div>
+          <div className="h-2 bg-surface-container rounded-full overflow-hidden">
+            <div className="h-full bg-primary rounded-full" style={{width: `${budgetPct}%`}}></div>
+          </div>
+          <p className="label-small text-on-surface-variant mt-2">{budgetPct}% used</p>
+        </div>
+        
+        <div className="card">
+          <div className="flex-between mb-3">
+            <span className="title-medium text-on-surface">Goals Progress</span>
+            <Link to="/goals" className="label-small text-primary">View All</Link>
+          </div>
+          <div className="flex-between body-medium mb-2">
+            <span className="text-on-surface-variant">Rp {totalGoal.toLocaleString()}</span>
+            <span className="text-on-surface-variant">Saved: Rp {totalCurrent.toLocaleString()}</span>
+          </div>
+          <div className="h-2 bg-surface-container rounded-full overflow-hidden">
+            <div className="h-full bg-success rounded-full" style={{width: `${goalPct}%`}}></div>
+          </div>
+          <p className="label-small text-on-surface-variant mt-2">{goalPct}% achieved</p>
+        </div>
+      </div>
+      
+      {/* Chart */}
+      <div className="card mb-6">
+        <h2 className="title-medium text-on-surface mb-4">Cashflow Trend</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--md-sys-color-outline-variant)" />
+            <XAxis dataKey="name" stroke="var(--md-sys-color-on-surface-variant)" />
+            <YAxis stroke="var(--md-sys-color-on-surface-variant)" />
+            <Tooltip contentStyle={{ backgroundColor: 'var(--md-sys-color-surface-container)', border: 'none', borderRadius: 'var(--md-shape-corner-medium)' }} />
+            <Line type="monotone" dataKey="value" stroke="var(--md-sys-color-primary)" strokeWidth={2} />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
+      {/* Quick Actions */}
+      <div className="grid grid-cols-4">
+        <Link to="/wallets" className="card text-center cursor-pointer"><div className="text-2xl mb-1">👛</div><div className="title-small text-on-surface">Wallets</div></Link>
+        <Link to="/transactions" className="card text-center cursor-pointer"><div className="text-2xl mb-1">💰</div><div className="title-small text-on-surface">Transactions</div></Link>
+        <Link to="/budgets" className="card text-center cursor-pointer"><div className="text-2xl mb-1">📊</div><div className="title-small text-on-surface">Budgets</div></Link>
+        <Link to="/goals" className="card text-center cursor-pointer"><div className="text-2xl mb-1">🎯</div><div className="title-small text-on-surface">Goals</div></Link>
+      </div>
+    </div>
+  );
 };

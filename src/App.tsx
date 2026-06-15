@@ -1,43 +1,27 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/authStore';
-import { NotificationProvider } from './components/Notification';
 import { LoginPage } from './pages/LoginPage';
 import { DashboardPage } from './pages/DashboardPage';
 import { WalletsPage } from './pages/WalletsPage';
 import { TransactionsPage } from './pages/TransactionsPage';
-import { BudgetsPage } from './pages/BudgetsPage';
-import { GoalsPage } from './pages/GoalsPage';
-import { SettingsPage } from './pages/SettingsPage';
-import { ReportPage } from './pages/ReportPage';
-import { RecurringPage } from './pages/RecurringPage';
-import { BillsPage } from './pages/BillsPage';
-import { NetWorthPage } from './pages/NetWorthPage';
-import { AIPage } from './pages/AIPage';
 
-const Protected = ({ children }) => { const user = useAuthStore(s => s.user); return user ? children : <Navigate to="/login" />; };
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const user = useAuthStore((state) => state.user);
+  return user ? <>{children}</> : <Navigate to="/login" />;
+};
 
 function App() {
   return (
-    <NotificationProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<Protected><DashboardPage /></Protected>} />
-          <Route path="/dashboard" element={<Protected><DashboardPage /></Protected>} />
-          <Route path="/wallets" element={<Protected><WalletsPage /></Protected>} />
-          <Route path="/transactions" element={<Protected><TransactionsPage /></Protected>} />
-          <Route path="/budgets" element={<Protected><BudgetsPage /></Protected>} />
-          <Route path="/goals" element={<Protected><GoalsPage /></Protected>} />
-          <Route path="/reports" element={<Protected><ReportPage /></Protected>} />
-          <Route path="/recurring" element={<Protected><RecurringPage /></Protected>} />
-          <Route path="/bills" element={<Protected><BillsPage /></Protected>} />
-          <Route path="/networth" element={<Protected><NetWorthPage /></Protected>} />
-          <Route path="/ai-advisor" element={<Protected><AIPage /></Protected>} />
-          <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
-        </Routes>
-      </BrowserRouter>
-    </NotificationProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+        <Route path="/wallets" element={<ProtectedRoute><WalletsPage /></ProtectedRoute>} />
+        <Route path="/transactions" element={<ProtectedRoute><TransactionsPage /></ProtectedRoute>} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 export default App;

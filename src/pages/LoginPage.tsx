@@ -8,21 +8,35 @@ export const LoginPage = () => {
   const [error, setError] = useState('');
   const login = useAuthStore(s => s.login);
   const navigate = useNavigate();
-  const handleSubmit = async (e: React.FormEvent) => { e.preventDefault(); const success = await login(email, password); if (success) navigate('/dashboard'); else setError('Invalid credentials'); };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const success = await login(email, password);
+    if (success) navigate('/dashboard');
+    else setError('Invalid credentials');
+  };
+
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--md-sys-color-surface)', padding: '16px' }}>
-      <div className="m3-card-elevated" style={{ maxWidth: 400, width: '100%' }}>
-        <div style={{ textAlign: 'center', marginBottom: 32 }}>
-          <div className="m3-headline-medium" style={{ color: 'var(--md-sys-color-primary)' }}>My Finance Pro</div>
-          <div className="m3-body-medium" style={{ color: 'var(--md-sys-color-on-surface-variant)' }}>Kelola keuangan dengan mudah</div>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ backgroundColor: 'var(--md-sys-color-surface)' }}>
+      <div className="card-elevated w-full max-w-md">
+        <div className="text-center mb-8">
+          <h1 className="title-large text-primary">My Finance Pro</h1>
+          <p className="body-medium text-on-surface-variant mt-2">Kelola keuangan dengan mudah</p>
         </div>
         <form onSubmit={handleSubmit}>
-          <div className="m3-text-field" style={{ marginBottom: 16 }}><label>Email</label><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" required /></div>
-          <div className="m3-text-field" style={{ marginBottom: 24 }}><label>Password</label><input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required /></div>
-          {error && <div className="m3-body-small" style={{ color: 'var(--md-sys-color-error)', marginBottom: 16 }}>{error}</div>}
-          <button type="submit" className="m3-button m3-button-filled" style={{ width: '100%' }}>Login</button>
+          <div className="mb-4">
+            <label className="label-small text-on-surface-variant mb-1 block">Email</label>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="input w-full" placeholder="Email" required />
+          </div>
+          <div className="mb-6">
+            <label className="label-small text-on-surface-variant mb-1 block">Password</label>
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="input w-full" placeholder="Password" required />
+          </div>
+          {error && <div className="body-small text-error mb-4">{error}</div>}
+          <button type="submit" className="btn-primary w-full">Login</button>
         </form>
-        <div className="m3-divider" /><div className="m3-body-small" style={{ textAlign: 'center', color: 'var(--md-sys-color-on-surface-variant)' }}>Demo: email & password apa saja</div>
+        <div className="divider my-4" />
+        <div className="body-small text-center text-on-surface-variant">Demo: email & password apa saja</div>
       </div>
     </div>
   );
