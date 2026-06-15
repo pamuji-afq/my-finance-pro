@@ -46,21 +46,21 @@ export const GoalsPage = () => {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Financial Goals</h1>
-        <button onClick={() => setShowForm(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg">+ New Goal</button>
+        <button onClick={() => setShowForm(true)} className="bg-primary text-white px-4 py-2 rounded-md">+ New Goal</button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {goals.map(g => {
           const pct = Math.min(100, (g.current / g.target) * 100);
           return (
-            <div key={g.id} className="bg-white rounded-xl shadow p-4">
+            <div key={g.id} className="bg-surface rounded-lg shadow p-4">
               <div className="flex justify-between items-start mb-2">
-                <div><h3 className="font-bold text-lg">{g.icon} {g.name}</h3><p className="text-sm text-gray-500">Rp {g.current.toLocaleString()} / Rp {g.target.toLocaleString()}</p></div>
-                <div className="text-2xl font-bold text-green-600">{pct.toFixed(0)}%</div>
+                <div><h3 className="font-bold text-lg">{g.icon} {g.name}</h3><p className="text-sm text-on-surface-variant">Rp {g.current.toLocaleString()} / Rp {g.target.toLocaleString()}</p></div>
+                <div className="text-2xl font-bold text-success">{pct.toFixed(0)}%</div>
               </div>
-              <div className="h-2 bg-gray-200 rounded-full mt-2 mb-3 overflow-hidden"><div className="h-full bg-green-500 rounded-full" style={{ width: `${pct}%` }}></div></div>
+              <div className="h-2 bg-surface-container-high rounded-full mt-2 mb-3 overflow-hidden"><div className="h-full bg-success-container0 rounded-full" style={{ width: `${pct}%` }}></div></div>
               <div className="flex justify-end gap-2">
-                <button onClick={() => setShowContribute(g)} className="bg-green-600 text-white px-3 py-1 rounded text-sm">+ Contribute</button>
+                <button onClick={() => setShowContribute(g)} className="bg-success text-white px-3 py-1 rounded text-sm">+ Contribute</button>
                 <button onClick={() => openEdit(g)} className="text-blue-500 text-sm">Edit</button>
                 <button onClick={() => setDeleteTarget(g)} className="text-red-500 text-sm">Delete</button>
               </div>
@@ -71,14 +71,14 @@ export const GoalsPage = () => {
 
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+          <div className="bg-surface rounded-lg shadow-xl w-full max-w-md p-6">
             <h2 className="text-xl font-bold mb-4">{editingGoal ? 'Edit Goal' : 'New Goal'}</h2>
             <form onSubmit={handleSubmit}>
-              <input type="text" placeholder="Goal Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full p-3 border rounded-lg mb-3" required disabled={!!editingGoal} />
-              <input type="number" placeholder="Target Amount" value={form.target} onChange={e => setForm({ ...form, target: parseFloat(e.target.value) || 0 })} className="w-full p-3 border rounded-lg mb-4" required />
+              <input type="text" placeholder="Goal Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full p-3 border rounded-md mb-3" required disabled={!!editingGoal} />
+              <input type="number" placeholder="Target Amount" value={form.target} onChange={e => setForm({ ...form, target: parseFloat(e.target.value) || 0 })} className="w-full p-3 border rounded-md mb-4" required />
               <div className="flex gap-3">
-                <button type="button" onClick={() => { setShowForm(false); setEditingGoal(null); setForm({ name: '', target: 0, icon: '🎯', color: '#0B57D0' }); }} className="flex-1 border rounded-lg p-2">Cancel</button>
-                <button type="submit" className="flex-1 bg-blue-600 text-white rounded-lg p-2">Save</button>
+                <button type="button" onClick={() => { setShowForm(false); setEditingGoal(null); setForm({ name: '', target: 0, icon: '🎯', color: '#0B57D0' }); }} className="flex-1 border rounded-md p-2">Cancel</button>
+                <button type="submit" className="flex-1 bg-primary text-white rounded-md p-2">Save</button>
               </div>
             </form>
           </div>
@@ -87,13 +87,13 @@ export const GoalsPage = () => {
 
       {showContribute && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+          <div className="bg-surface rounded-lg shadow-xl w-full max-w-md p-6">
             <h2 className="text-xl font-bold mb-2">Contribute to {showContribute.name}</h2>
-            <p className="text-gray-500 mb-4">Current: Rp {showContribute.current.toLocaleString()} / Rp {showContribute.target.toLocaleString()}</p>
-            <input type="number" placeholder="Amount" value={amount} onChange={e => setAmount(parseFloat(e.target.value) || 0)} className="w-full p-3 border rounded-lg mb-4" />
+            <p className="text-on-surface-variant mb-4">Current: Rp {showContribute.current.toLocaleString()} / Rp {showContribute.target.toLocaleString()}</p>
+            <input type="number" placeholder="Amount" value={amount} onChange={e => setAmount(parseFloat(e.target.value) || 0)} className="w-full p-3 border rounded-md mb-4" />
             <div className="flex gap-3">
-              <button onClick={() => setShowContribute(null)} className="flex-1 border rounded-lg p-2">Cancel</button>
-              <button onClick={doContribute} className="flex-1 bg-green-600 text-white rounded-lg p-2">Add</button>
+              <button onClick={() => setShowContribute(null)} className="flex-1 border rounded-md p-2">Cancel</button>
+              <button onClick={doContribute} className="flex-1 bg-success text-white rounded-md p-2">Add</button>
             </div>
           </div>
         </div>

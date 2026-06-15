@@ -10,6 +10,10 @@ import { BudgetsPage } from './pages/BudgetsPage';
 import { GoalsPage } from './pages/GoalsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { ReportPage } from './pages/ReportPage';
+import { RecurringPage } from './pages/RecurringPage';
+import { BillsPage } from './pages/BillsPage';
+import { NetWorthPage } from './pages/NetWorthPage';
+import { AIPage } from './pages/AIPage';
 
 const Protected = ({ children }) => { const user = useAuthStore(s => s.user); return user ? children : <Navigate to="/login" />; };
 
@@ -26,6 +30,10 @@ function App() {
           <Route path="/budgets" element={<Protected><BudgetsPage /></Protected>} />
           <Route path="/goals" element={<Protected><GoalsPage /></Protected>} />
           <Route path="/reports" element={<Protected><ReportPage /></Protected>} />
+          <Route path="/recurring" element={<Protected><RecurringPage /></Protected>} />
+          <Route path="/bills" element={<Protected><BillsPage /></Protected>} />
+          <Route path="/networth" element={<Protected><NetWorthPage /></Protected>} />
+          <Route path="/ai-advisor" element={<Protected><AIPage /></Protected>} />
           <Route path="/settings" element={<Protected><SettingsPage /></Protected>} />
         </Routes>
       </BrowserRouter>

@@ -32,8 +32,8 @@ export const SettingsPage = () => {
       <h1 className="text-2xl font-bold mb-6" style={{color: 'var(--on-surface)'}}>Settings</h1>
       <div className="card divide-y" style={{overflow: 'hidden'}}>
         <div className="p-4"><h2 className="font-semibold mb-3" style={{color: 'var(--on-surface)'}}>Profile</h2><p><span className="text-on-surface-variant">Email:</span> {user?.email}</p></div>
-        <div className="p-4 flex justify-between items-center"><span className="font-semibold" style={{color: 'var(--on-surface)'}}>Dark Mode</span><button onClick={toggleDark} className={`w-12 h-6 rounded-full transition ${dark ? 'bg-primary' : 'bg-outline'}`}><div className={`w-5 h-5 rounded-full bg-white transition-transform ${dark ? 'translate-x-6' : 'translate-x-0.5'}`}></div></button></div>
-        <div className="p-4"><button onClick={handleLogout} className="w-full py-2 rounded-lg transition" style={{background: 'var(--error-container)', color: 'var(--error)'}}>Logout</button></div>
+        <div className="p-4 flex justify-between items-center"><span className="font-semibold" style={{color: 'var(--on-surface)'}}>Dark Mode</span><button onClick={toggleDark} className={`w-12 h-6 rounded-full transition ${dark ? 'bg-primary' : 'bg-outline'}`}><div className={`w-5 h-5 rounded-full bg-surface transition-transform ${dark ? 'translate-x-6' : 'translate-x-0.5'}`}></div></button></div>
+        <div className="p-4"><button onClick={handleLogout} className="w-full py-2 rounded-md transition" style={{background: 'var(--error-container)', color: 'var(--error)'}}>Logout</button></div>
         <div className="p-4 text-center text-sm" style={{color: 'var(--on-surface-variant)'}}><p>My Finance Pro v1.0.0</p></div>
       </div>
     </div>
