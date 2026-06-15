@@ -1,16 +1,19 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useWalletStore } from '../stores/walletStore';
 import { useTransactionStore } from '../stores/transactionStore';
 import { useBudgetStore } from '../stores/budgetStore';
 import { useGoalStore } from '../stores/goalStore';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../theme/ThemeProvider';
 
 export const DashboardPage = () => {
   const { wallets, activeWalletId, setActiveWallet } = useWalletStore();
   const { transactions } = useTransactionStore();
   const { budgets } = useBudgetStore();
   const { goals } = useGoalStore();
+  const { theme, toggleTheme } = useTheme();
+  const navigate = useNavigate();
   const total = wallets.reduce((s,w)=>s+w.balance,0);
   const currentMonth = new Date().toISOString().slice(0,7);
   const monthlyTx = transactions.filter(t => t.date.startsWith(currentMonth));
@@ -24,130 +27,10 @@ export const DashboardPage = () => {
   const totalCurrent = goals.reduce((s,g)=>s+g.current,0);
   const goalPct = totalGoal > 0 ? (totalCurrent/totalGoal*100).toFixed(0) : 0;
   const chartData = [['Jan',4500],['Feb',5200],['Mar',4800],['Apr',6100],['May',5800],['Jun',6300]].map(([n,v])=>({name:n,value:v}));
-
-  return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6 flex-wrap gap-2">
-        <h1 className="text-3xl font-bold" style={{color: 'var(--on-surface)'}}>Dashboard</h1>
-        <div className="flex gap-2">
-          {wallets.map(w => (
-            <button
-              key={w.id}
-              onClick={() => setActiveWallet(w.id)}
-              className={`px-3 py-1 rounded-full text-sm transition ${
-                activeWalletId === w.id 
-                  ? 'bg-primary text-on-primary' 
-                  : 'bg-surface-container text-on-surface-variant'
-              }`}
-            >
-              {w.name}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="rounded-xl p-4 text-white" style={{background: 'linear-gradient(135deg, var(--primary), #0842A0)'}}>
-          <div className="text-sm opacity-80">Total Balance</div>
-          <div className="text-2xl font-bold">Rp {total.toLocaleString()}</div>
-          <div className="text-xs opacity-70 mt-1">{wallets.length} wallets</div>
-        </div>
-        <div className="rounded-xl p-4" style={{background: 'var(--success-container)', color: 'var(--success)'}}>
-          <div className="text-sm opacity-80">Income</div>
-          <div className="text-xl font-bold">+Rp {income.toLocaleString()}</div>
-          <div className="text-xs opacity-70 mt-1">This month</div>
-        </div>
-        <div className="rounded-xl p-4" style={{background: 'var(--error-container)', color: 'var(--error)'}}>
-          <div className="text-sm opacity-80">Expense</div>
-          <div className="text-xl font-bold">-Rp {expense.toLocaleString()}</div>
-          <div className="text-xs opacity-70 mt-1">This month</div>
-        </div>
-        <div className="rounded-xl p-4" style={{background: 'var(--primary-container)', color: 'var(--primary)'}}>
-          <div className="text-sm opacity-80">Saving Rate</div>
-          <div className="text-xl font-bold">{savingRate}%</div>
-          <div className="text-xs opacity-70 mt-1">of income</div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold" style={{color: 'var(--on-surface)'}}>Budget Progress</h2>
-            <Link to="/budgets" className="text-sm" style={{color: 'var(--primary)'}}>Manage</Link>
-          </div>
-          <div className="mb-2 flex justify-between text-sm">
-            <span>Total Budget: Rp {totalBudget.toLocaleString()}</span>
-            <span>Spent: Rp {totalSpent.toLocaleString()}</span>
-          </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{background: 'var(--surface-container-high)'}}>
-            <div className="h-full rounded-full transition-all" style={{width: `${budgetPct}%`, background: 'var(--primary)'}}></div>
-          </div>
-          <p className="text-xs mt-2" style={{color: 'var(--on-surface-variant)'}}>{budgetPct}% used</p>
-        </div>
-
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold" style={{color: 'var(--on-surface)'}}>Goals Progress</h2>
-            <Link to="/goals" className="text-sm" style={{color: 'var(--primary)'}}>View All</Link>
-          </div>
-          <div className="mb-2 flex justify-between text-sm">
-            <span>Target: Rp {totalGoal.toLocaleString()}</span>
-            <span>Saved: Rp {totalCurrent.toLocaleString()}</span>
-          </div>
-          <div className="h-2 rounded-full overflow-hidden" style={{background: 'var(--surface-container-high)'}}>
-            <div className="h-full rounded-full transition-all" style={{width: `${goalPct}%`, background: 'var(--success)'}}></div>
-          </div>
-          <p className="text-xs mt-2" style={{color: 'var(--on-surface-variant)'}}>{goalPct}% achieved</p>
-        </div>
-      </div>
-
-      <div className="card mb-8">
-        <h2 className="font-semibold mb-4" style={{color: 'var(--on-surface)'}}>Cashflow Trend</h2>
-        <ResponsiveContainer width="100%" height={250}>
-          <LineChart data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--outline-variant)" />
-            <XAxis dataKey="name" stroke="var(--on-surface-variant)" />
-            <YAxis stroke="var(--on-surface-variant)" />
-            <Tooltip contentStyle={{background: 'var(--surface-container)', border: 'none', borderRadius: 'var(--shape-medium)'}} />
-            <Line type="monotone" dataKey="value" stroke="var(--primary)" strokeWidth={2} />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Link to="/wallets" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">👛</div>
-          <div style={{color: 'var(--on-surface)'}}>Wallets</div>
-        </Link>
-        <Link to="/transactions" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">💰</div>
-          <div style={{color: 'var(--on-surface)'}}>Transactions</div>
-        </Link>
-        <Link to="/budgets" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">📊</div>
-          <div style={{color: 'var(--on-surface)'}}>Budgets</div>
-        </Link>
-        <Link to="/goals" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">🎯</div>
-          <div style={{color: 'var(--on-surface)'}}>Goals</div>
-        </Link>
-        <Link to="/reports" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">📈</div>
-          <div style={{color: 'var(--on-surface)'}}>Reports</div>
-        </Link>
-        <Link to="/ai-advisor" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">🤖</div>
-          <div style={{color: 'var(--on-surface)'}}>AI Advisor</div>
-        </Link>
-        <Link to="/recurring" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">🔄</div>
-          <div style={{color: 'var(--on-surface)'}}>Recurring</div>
-        </Link>
-        <Link to="/settings" className="card text-center hover:opacity-80 transition">
-          <div className="text-2xl mb-1">⚙️</div>
-          <div style={{color: 'var(--on-surface)'}}>Settings</div>
-        </Link>
-      </div>
-    </div>
-  );
+  const navItems = [{ path: '/dashboard', label: 'Dashboard', icon: '🏠' },{ path: '/wallets', label: 'Wallets', icon: '👛' },{ path: '/transactions', label: 'Transactions', icon: '💰' },{ path: '/budgets', label: 'Budgets', icon: '📊' },{ path: '/goals', label: 'Goals', icon: '🎯' },{ path: '/reports', label: 'Reports', icon: '📈' },{ path: '/ai-advisor', label: 'AI', icon: '🤖' },{ path: '/settings', label: 'Settings', icon: '⚙️' }];
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  useEffect(() => { const handleResize = () => setIsMobile(window.innerWidth <= 768); window.addEventListener('resize', handleResize); return () => window.removeEventListener('resize', handleResize); }, []);
+  const NavRail = () => (<div className="m3-nav-rail" style={{ display: isMobile ? 'none' : 'flex' }}><div style={{ marginBottom: 24 }}><div className="m3-nav-rail-item" onClick={toggleTheme}><span style={{ fontSize: 24 }}>{theme === 'dark' ? '☀️' : '🌙'}</span><span className="m3-label-small">Theme</span></div></div><div style={{ flex: 1 }}>{navItems.map(item => (<div key={item.path} className={`m3-nav-rail-item ${window.location.pathname === item.path ? 'm3-nav-rail-item-active' : ''}`} onClick={() => navigate(item.path)}><span style={{ fontSize: 24 }}>{item.icon}</span><span className="m3-label-small">{item.label}</span></div>))}</div></div>);
+  const BottomNav = () => (<div className="m3-bottom-nav" style={{ display: isMobile ? 'flex' : 'none' }}>{navItems.slice(0,4).map(item => (<div key={item.path} className={`m3-bottom-nav-item ${window.location.pathname === item.path ? 'm3-bottom-nav-item-active' : ''}`} onClick={() => navigate(item.path)}><i className={`ti ti-${item.label === 'Dashboard' ? 'layout-dashboard' : item.label === 'Wallets' ? 'wallet' : item.label === 'Transactions' ? 'receipt' : 'chart-pie'}`} style={{ fontSize: 24 }}></i><span className="m3-label-small">{item.label}</span></div>))}<div className="m3-bottom-nav-item" onClick={toggleTheme}><i className={`ti ${theme === 'dark' ? 'ti-sun' : 'ti-moon'}`} style={{ fontSize: 24 }}></i><span className="m3-label-small">Theme</span></div></div>);
+  return (<><NavRail /><BottomNav /><div className="m3-main-content"><div className="m3-grid m3-grid-cols-4" style={{ marginBottom: 24 }}><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-on-primary-container)' }}><span className="m3-title-small">Total Balance</span><div className="m3-headline-medium">Rp {total.toLocaleString()}</div><span className="m3-label-small">{wallets.length} wallets</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--md-sys-color-success)' }}><span className="m3-title-small">Income</span><div className="m3-headline-medium">+Rp {income.toLocaleString()}</div><span className="m3-label-small">This month</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-error-container)', color: 'var(--md-sys-color-error)' }}><span className="m3-title-small">Expense</span><div className="m3-headline-medium">-Rp {expense.toLocaleString()}</div><span className="m3-label-small">This month</span></div><div className="m3-card-elevated" style={{ background: 'var(--md-sys-color-secondary-container)', color: 'var(--md-sys-color-secondary)' }}><span className="m3-title-small">Saving Rate</span><div className="m3-headline-medium">{savingRate}%</div><span className="m3-label-small">of income</span></div></div><div className="m3-grid m3-grid-cols-2" style={{ marginBottom: 24 }}><div className="m3-card"><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}><span className="m3-title-medium">Budget Progress</span><Link to="/budgets" className="m3-label-medium" style={{ color: 'var(--md-sys-color-primary)' }}>Manage</Link></div><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}><span>Total: Rp {totalBudget.toLocaleString()}</span><span>Spent: Rp {totalSpent.toLocaleString()}</span></div><div className="m3-divider" /><div style={{ marginTop: 12 }}><div className="m3-label-medium">{budgetPct}% used</div><div style={{ height: 8, background: 'var(--md-sys-color-surface-container)', borderRadius: 'var(--md-shape-corner-full)', marginTop: 8 }}><div style={{ width: `${budgetPct}%`, height: '100%', background: 'var(--md-sys-color-primary)', borderRadius: 'var(--md-shape-corner-full)' }} /></div></div></div><div className="m3-card"><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}><span className="m3-title-medium">Goals Progress</span><Link to="/goals" className="m3-label-medium" style={{ color: 'var(--md-sys-color-primary)' }}>View All</Link></div><div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}><span>Target: Rp {totalGoal.toLocaleString()}</span><span>Saved: Rp {totalCurrent.toLocaleString()}</span></div><div className="m3-divider" /><div style={{ marginTop: 12 }}><div className="m3-label-medium">{goalPct}% achieved</div><div style={{ height: 8, background: 'var(--md-sys-color-surface-container)', borderRadius: 'var(--md-shape-corner-full)', marginTop: 8 }}><div style={{ width: `${goalPct}%`, height: '100%', background: 'var(--md-sys-color-success)', borderRadius: 'var(--md-shape-corner-full)' }} /></div></div></div></div><div className="m3-card" style={{ marginBottom: 24 }}><span className="m3-title-medium" style={{ marginBottom: 16, display: 'block' }}>Cashflow Trend</span><ResponsiveContainer width="100%" height={280}><LineChart data={chartData}><CartesianGrid strokeDasharray="3 3" stroke="var(--md-sys-color-outline-variant)" /><XAxis dataKey="name" stroke="var(--md-sys-color-on-surface-variant)" /><YAxis stroke="var(--md-sys-color-on-surface-variant)" /><Tooltip contentStyle={{ background: 'var(--md-sys-color-surface-container)', border: 'none', borderRadius: 'var(--md-shape-corner-medium)' }} /><Line type="monotone" dataKey="value" stroke="var(--md-sys-color-primary)" strokeWidth={2} /></LineChart></ResponsiveContainer></div><div className="m3-grid m3-grid-cols-4">{wallets.map(w => (<div key={w.id} className={`m3-card ${activeWalletId === w.id ? 'm3-card-elevated' : ''}`} onClick={() => setActiveWallet(w.id)} style={{ cursor: 'pointer' }}><span className="m3-title-small">{w.name}</span><div className="m3-title-medium" style={{ color: 'var(--md-sys-color-primary)' }}>Rp {w.balance.toLocaleString()}</div></div>))}</div></div></>);
 };
