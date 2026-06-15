@@ -1,9 +1,114 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer base {
-  body { font-family: 'Inter', system-ui, sans-serif; background: #f5f5f5; color: #1f1f1f; }
-  .dark { background: #1a1c1e; color: #e3e2e6; }
-  .dark .card { background: #2a2c2e; }
-  .dark input, .dark select { background: #3a3c3e; color: #e3e2e6; border-color: #4a4c4e; }
+
+:root {
+  /* Light Mode Colors */
+  --primary: #0B57D0;
+  --on-primary: #FFFFFF;
+  --primary-container: #D3E3FD;
+  --secondary: #006A6A;
+  --on-secondary: #FFFFFF;
+  --secondary-container: #9CF1F1;
+  --error: #C62828;
+  --on-error: #FFFFFF;
+  --error-container: #FFEBEE;
+  --surface: #FFFFFF;
+  --on-surface: #1F1F1F;
+  --surface-container: #EEF3FD;
+  --surface-container-high: #E2EAFA;
+  --on-surface-variant: #5F6368;
+  --outline: #BDBDBD;
+  --outline-variant: #DADCE0;
+  --success: #1B5E20;
+  --success-container: #E8F5E9;
+  --warning: #E65100;
+  --warning-container: #FFF3E0;
+
+  /* Shape Tokens */
+  --shape-none: 0px;
+  --shape-extra-small: 4px;
+  --shape-small: 8px;
+  --shape-medium: 12px;
+  --shape-large: 16px;
+  --shape-extra-large: 28px;
+  --shape-full: 9999px;
+
+  /* Spacing Tokens */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-xxl: 32px;
+}
+
+.dark {
+  --primary: #A8C7FA;
+  --on-primary: #002E6E;
+  --primary-container: #0B57D044;
+  --secondary: #80D4D4;
+  --on-secondary: #003737;
+  --secondary-container: #004F4F;
+  --error: #F2B8B5;
+  --on-error: #8C1D18;
+  --error-container: #8C1D18;
+  --surface: #1A1C1E;
+  --on-surface: #E3E2E6;
+  --surface-container: #1E2124;
+  --surface-container-high: #282C30;
+  --on-surface-variant: #C4C7C5;
+  --outline: #8E9099;
+  --outline-variant: #44474E;
+  --success: #A5D6A7;
+  --success-container: #1B5E2044;
+  --warning: #FFCC02;
+  --warning-container: #E6510022;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--surface);
+  color: var(--on-surface);
+  transition: background 0.3s, color 0.3s;
+}
+
+/* M3 Component Classes */
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--shape-full);
+  transition: opacity 0.2s;
+}
+.btn-primary:hover { opacity: 0.9; }
+
+.btn-secondary {
+  background: var(--secondary-container);
+  color: var(--on-surface);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--shape-full);
+}
+
+.card {
+  background: var(--surface-container);
+  border-radius: var(--shape-large);
+  padding: var(--spacing-lg);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.dark .card {
+  background: var(--surface-container-high);
+}
+
+.input-m3 {
+  background: var(--surface-container);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--shape-medium);
+  padding: var(--spacing-md);
+  color: var(--on-surface);
+}
+.input-m3:focus {
+  outline: none;
+  border-color: var(--primary);
 }

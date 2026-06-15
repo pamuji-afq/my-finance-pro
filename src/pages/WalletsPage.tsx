@@ -3,7 +3,10 @@ import { useWalletStore } from '../stores/walletStore';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { EmptyState } from '../components/EmptyState';
 
+import { useNotification } from '../components/Notification';
+
 export const WalletsPage = () => {
+  const { showNotification } = useNotification();
   const { wallets, addWallet, updateWallet, deleteWallet, transfer } = useWalletStore();
   const [showForm, setShowForm] = useState(false);
   const [showTransfer, setShowTransfer] = useState(false);
@@ -17,7 +20,7 @@ export const WalletsPage = () => {
     if (editingWallet) {
       updateWallet(editingWallet.id, form);
     } else {
-      addWallet({ ...form, currency: 'IDR', color: '#0B57D0' });
+      addWallet({ ...form, currency: 'IDR', color: '#0B57D0' }); showNotification('Wallet added', 'success');
     }
     setForm({ name: '', balance: 0 });
     setEditingWallet(null);
@@ -114,7 +117,7 @@ export const WalletsPage = () => {
       )}
 
       {/* Delete Confirmation */}
-      <ConfirmDialog isOpen={!!deleteTarget} title="Hapus Wallet" message={`Apakah Anda yakin ingin menghapus wallet "${deleteTarget?.name}"? Data transaksi terkait wallet ini akan tetap tersimpan.`} onConfirm={() => { deleteWallet(deleteTarget.id); setDeleteTarget(null); }} onCancel={() => setDeleteTarget(null)} />
+      <ConfirmDialog isOpen={!!deleteTarget} title="Hapus Wallet" message={`Apakah Anda yakin ingin menghapus wallet "${deleteTarget?.name}"? Data transaksi terkait wallet ini akan tetap tersimpan.`} onConfirm={() => { deleteWallet(deleteTarget.id); setDeleteTarget(null); showNotification('Wallet deleted', 'success'); }} onCancel={() => setDeleteTarget(null)} />
     </div>
   );
 };

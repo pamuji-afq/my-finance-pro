@@ -1,0 +1,17 @@
+export const typography = {
+  displayLarge: { size: '57px', lineHeight: '64px', weight: 400 },
+  displayMedium: { size: '45px', lineHeight: '52px', weight: 400 },
+  displaySmall: { size: '36px', lineHeight: '44px', weight: 400 },
+  headlineLarge: { size: '32px', lineHeight: '40px', weight: 400 },
+  headlineMedium: { size: '28px', lineHeight: '36px', weight: 400 },
+  headlineSmall: { size: '24px', lineHeight: '32px', weight: 400 },
+  titleLarge: { size: '22px', lineHeight: '28px', weight: 400 },
+  titleMedium: { size: '16px', lineHeight: '24px', weight: 500 },
+  titleSmall: { size: '14px', lineHeight: '20px', weight: 500 },
+  bodyLarge: { size: '16px', lineHeight: '24px', weight: 400 },
+  bodyMedium: { size: '14px', lineHeight: '20px', weight: 400 },
+  bodySmall: { size: '12px', lineHeight: '16px', weight: 400 },
+  labelLarge: { size: '14px', lineHeight: '20px', weight: 500 },
+  labelMedium: { size: '12px', lineHeight: '16px', weight: 500 },
+  labelSmall: { size: '11px', lineHeight: '16px', weight: 500 },
+};
