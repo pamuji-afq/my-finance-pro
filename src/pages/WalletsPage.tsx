@@ -1,0 +1,10 @@
+import React, { useState } from 'react';
+import { useWalletStore } from '../stores/walletStore';
+export const WalletsPage = () => {
+  const { wallets, addWallet, deleteWallet, updateBalance } = useWalletStore();
+  const [show, setShow] = useState(false);
+  const [name, setName] = useState('');
+  const [balance, setBalance] = useState(0);
+  const add = (e) => { e.preventDefault(); if(name){ addWallet({ name, balance, currency: 'IDR' }); setName(''); setBalance(0); setShow(false); } };
+  return <div className="p-6"><div className="flex justify-between mb-6"><h1 className="text-2xl font-bold">Wallets</h1><button onClick={()=>setShow(true)} className="bg-blue-600 text-white px-4 py-2 rounded-lg">+ New Wallet</button></div><div className="grid gap-4">{wallets.map(w=><div key={w.id} className="bg-white rounded-xl shadow p-4"><div className="flex justify-between"><div><h3 className="font-bold text-lg">{w.name}</h3><p className="text-2xl font-bold text-blue-600">Rp {w.balance.toLocaleString()}</p></div><button onClick={()=>deleteWallet(w.id)} className="text-red-500">🗑️</button></div></div>)}</div>{show && <div className="fixed inset-0 bg-black/50 flex items-center justify-center"><div className="bg-white rounded-xl p-6 w-96"><h2 className="text-xl font-bold mb-4">New Wallet</h2><form onSubmit={add}><input type="text" placeholder="Name" value={name} onChange={e=>setName(e.target.value)} className="w-full p-3 border rounded-lg mb-3" /><input type="number" placeholder="Balance" value={balance} onChange={e=>setBalance(parseFloat(e.target.value)||0)} className="w-full p-3 border rounded-lg mb-4" /><div className="flex gap-3"><button type="button" onClick={()=>setShow(false)} className="flex-1 border rounded-lg p-2">Cancel</button><button type="submit" className="flex-1 bg-blue-600 text-white rounded-lg p-2">Save</button></div></form></div></div>}</div>;
+};
