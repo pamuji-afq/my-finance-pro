@@ -7,6 +7,5 @@ export const useTransactionStore = create(persist((set, get) => ({
     { id: '3', walletId: '2', amount: 200000, type: 'expense', category: 'Transport', desc: 'Bensin', date: '2026-06-12' },
   ],
   addTransaction: (tx) => set(s => ({ transactions: [...s.transactions, { ...tx, id: Date.now().toString() }] })),
-  updateTransaction: (id, updates) => set(s => ({ transactions: s.transactions.map(t => t.id === id ? { ...t, ...updates } : t) })),
   deleteTransaction: (id) => set(s => ({ transactions: s.transactions.filter(t => t.id !== id) })),
 }), { name: 'transactions' }));

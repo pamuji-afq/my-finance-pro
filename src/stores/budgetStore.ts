@@ -6,7 +6,4 @@ export const useBudgetStore = create(persist((set, get) => ({
     { id: '2', category: 'Transport', amount: 1000000, spent: 200000, month: '2026-06' },
   ],
   addBudget: (b) => set(s => ({ budgets: [...s.budgets, { ...b, id: Date.now().toString(), spent: 0 }] })),
-  updateBudget: (id, amt) => set(s => ({ budgets: s.budgets.map(b => b.id === id ? { ...b, amount: amt } : b) })),
-  deleteBudget: (id) => set(s => ({ budgets: s.budgets.filter(b => b.id !== id) })),
-  updateSpent: (cat, amt) => set(s => ({ budgets: s.budgets.map(b => b.category === cat ? { ...b, spent: b.spent + amt } : b) })),
 }), { name: 'budgets' }));

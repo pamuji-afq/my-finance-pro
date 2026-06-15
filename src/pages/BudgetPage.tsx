@@ -1,11 +1,2 @@
-import React, { useState } from 'react';
-import { useBudgetStore } from '../stores/budgetStore';
-export const BudgetPage = () => {
-  const { budgets, addBudget, deleteBudget } = useBudgetStore();
-  const [showSheet, setShowSheet] = useState(false);
-  const [form, setForm] = useState({ category: '', amount: 0 });
-  const currentMonth = new Date().toISOString().slice(0,7);
-  const monthlyBudgets = budgets.filter(b => b.month === currentMonth);
-  const handleSubmit = (e) => { e.preventDefault(); if(form.category && form.amount){ addBudget({ ...form, month: currentMonth }); setForm({ category: '', amount: 0 }); setShowSheet(false); } };
-  return (<><div className="flex-between mb-4"><h1 className="text-title-large">Budget</h1><button onClick={() => setShowSheet(true)} className="btn-primary" style={{ width: 'auto', padding: '8px 16px' }}>+ Tambah</button></div>{monthlyBudgets.map(b => { const pct = Math.min(100, (b.spent/b.amount)*100); return <div key={b.id} className="card mb-2"><div className="flex-between"><span className="text-title-medium">{b.category}</span><span className="text-label">Rp {b.amount.toLocaleString()}</span></div><div className="progress-bar"><div className="progress-fill progress-fill-primary" style={{width: `${pct}%`}}></div></div><div className="flex-between mt-1"><span className="text-label">Spent: Rp {b.spent.toLocaleString()}</span><button onClick={() => deleteBudget(b.id)} className="text-error"><i className="ti ti-trash"></i></button></div></div>;})}{showSheet && <div className="sheet-overlay" onClick={() => setShowSheet(false)}><div className="sheet" onClick={e => e.stopPropagation()}><div className="sheet-handle"></div><h2 className="text-title-medium mb-4">Tambah Budget</h2><form onSubmit={handleSubmit}><select value={form.category} onChange={e=>setForm({...form,category:e.target.value})} className="input-field w-full mb-3" required><option value="">Pilih Kategori</option><option value="Food">Food</option><option value="Transport">Transport</option><option value="Bills">Bills</option><option value="Entertainment">Entertainment</option></select><input type="number" placeholder="Jumlah Budget" value={form.amount} onChange={e=>setForm({...form,amount:parseFloat(e.target.value)||0})} className="input-field w-full mb-4" required /><div className="flex gap-2"><button type="button" onClick={()=>setShowSheet(false)} className="btn-outline">Batal</button><button type="submit" className="btn-primary">Simpan</button></div></form></div></div>}</>);
-};
+import React from 'react';
+export const BudgetPage = () => { return <div><h1 className="text-title-large">Budget</h1><p className="text-label mt-2">Halaman sedang dalam pengembangan</p></div>; };

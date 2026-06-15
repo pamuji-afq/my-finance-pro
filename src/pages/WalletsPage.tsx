@@ -1,9 +1,2 @@
-import React, { useState } from 'react';
-import { useWalletStore } from '../stores/walletStore';
-export const WalletsPage = () => {
-  const { wallets, addWallet, deleteWallet } = useWalletStore();
-  const [showSheet, setShowSheet] = useState(false);
-  const [form, setForm] = useState({ name: '', balance: 0 });
-  const handleSubmit = (e) => { e.preventDefault(); if(form.name){ addWallet({ ...form, currency: 'IDR' }); setForm({ name: '', balance: 0 }); setShowSheet(false); } };
-  return (<><div className="flex-between mb-4"><h1 className="text-title-large">Wallets</h1><button onClick={() => setShowSheet(true)} className="btn-primary" style={{ width: 'auto', padding: '8px 16px' }}>+ Tambah</button></div>{wallets.map(w => <div key={w.id} className="card mb-2"><div className="flex-between"><div><div className="text-title-medium">{w.name}</div><div className="text-headline text-primary">Rp {w.balance.toLocaleString()}</div></div><button onClick={() => deleteWallet(w.id)} className="text-error"><i className="ti ti-trash"></i></button></div></div>)}{showSheet && <div className="sheet-overlay" onClick={() => setShowSheet(false)}><div className="sheet" onClick={e => e.stopPropagation()}><div className="sheet-handle"></div><h2 className="text-title-medium mb-4">Tambah Wallet</h2><form onSubmit={handleSubmit}><input type="text" placeholder="Nama Wallet" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} className="input-field w-full mb-3" required /><input type="number" placeholder="Saldo Awal" value={form.balance} onChange={e=>setForm({...form,balance:parseFloat(e.target.value)||0})} className="input-field w-full mb-4" required /><div className="flex gap-2"><button type="button" onClick={()=>setShowSheet(false)} className="btn-outline">Batal</button><button type="submit" className="btn-primary">Simpan</button></div></form></div></div>}</>);
-};
+import React from 'react';
+export const WalletsPage = () => { return <div><h1 className="text-title-large">Wallets</h1><p className="text-label mt-2">Halaman sedang dalam pengembangan</p></div>; };
